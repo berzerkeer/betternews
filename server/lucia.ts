@@ -17,6 +17,6 @@ export const lucia = new Lucia(adapter, {
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: { username: string };
+    DatabaseUserAttributes: { username: string }; // return username aswell with user attributes to use it in user pages without needing to query db for username again
   }
 }

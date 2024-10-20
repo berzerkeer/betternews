@@ -10,6 +10,7 @@ import type { ErrorResponse } from "~/shared/types.ts";
 
 const app = new Hono<Context>();
 
+// Attach user and session to all route context, so that these can be accessed via context in other routes
 app.use("*", cors(), async (c, next) => {
   const sessionId = lucia.readSessionCookie(c.req.header("Cookie") ?? "");
   if (!sessionId) {
