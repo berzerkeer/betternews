@@ -1,16 +1,10 @@
 import { fixupPluginRules } from "@eslint/compat";
-import pluginJs from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginDrizzle from "eslint-plugin-drizzle";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+
+import BaseEslintConfig from "../eslint.config.js";
 
 export default [
-  { files: ["**/*.{js,mjs,cjs,ts}"] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  eslintConfigPrettier,
+  ...BaseEslintConfig,
   {
     plugins: {
       drizzle: fixupPluginRules(eslintPluginDrizzle),

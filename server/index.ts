@@ -5,6 +5,7 @@ import { HTTPException } from "hono/http-exception";
 import type { Context } from "~/context.ts";
 import { lucia } from "~/lucia.ts";
 import { authRouter } from "~/routes/auth.ts";
+import { postsRouter } from "~/routes/posts.ts";
 
 import type { ErrorResponse } from "~/shared/types.ts";
 
@@ -36,7 +37,10 @@ app.use("*", cors(), async (c, next) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.basePath("/api").route("/auth", authRouter);
+const routes = app
+  .basePath("/api")
+  .route("/auth", authRouter)
+  .route("/posts", postsRouter);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

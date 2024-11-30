@@ -4,6 +4,8 @@ import { relations } from "drizzle-orm/relations";
 import { userTable } from "~/db/schemas/auth.ts";
 import { commentsTable } from "~/db/schemas/comments.ts";
 import { postUpvotesTable } from "~/db/schemas/upvotes.ts";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const postsTable = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -18,6 +20,17 @@ export const postsTable = pgTable("posts", {
   })
     .defaultNow()
     .notNull(),
+});
+
+export const insertPostSchema = createInsertSchema(postsTable, {
+  title: z.string().min(3, { message: "Title must be at least 3 characters" }),
+  url: z
+    .string()
+    .trim()
+    .url({ message: "URL must be a valid URL" })
+    .optional()
+    .or(z.literal("")),
+  content: z.string().optional(),
 });
 
 export const postRelations = relations(postsTable, ({ one, many }) => ({
