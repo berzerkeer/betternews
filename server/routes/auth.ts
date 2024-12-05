@@ -47,13 +47,13 @@ export const authRouter = new Hono<Context>()
   .post("/login", zValidator("form", loginSchema), async (c) => {
     const { username, password } = c.req.valid("form");
 
-    const [exisitingUser] = await db
+    const [existingUser] = await db
       .select()
       .from(userTable)
       .where(eq(userTable.username, username))
       .limit(1);
 
-    if (!exisitingUser) {
+    if (!existingUser) {
       throw new HTTPException(401, {
         message: "User doesn't exist",
       });
@@ -61,7 +61,7 @@ export const authRouter = new Hono<Context>()
 
     const validPassword = await Bun.password.verify(
       password,
-      exisitingUser.password_hash,
+      existingUser.password_hash,
     );
     if (!validPassword) {
       throw new HTTPException(401, {
@@ -69,7 +69,7 @@ export const authRouter = new Hono<Context>()
       });
     }
 
-    const session = await lucia.createSession(exisitingUser.id, { username });
+    const session = await lucia.createSession(existingUser.id, { username });
     const sessionCookie = lucia.createSessionCookie(session.id).serialize();
 
     c.header("Set-Cookie", sessionCookie, { append: true });
