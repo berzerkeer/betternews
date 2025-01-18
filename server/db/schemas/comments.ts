@@ -4,6 +4,8 @@ import { relations } from "drizzle-orm/relations";
 import { userTable } from "~/db/schemas/auth.ts";
 import { postsTable } from "~/db/schemas/posts.ts";
 import { commentUpvotesTable } from "~/db/schemas/upvotes.ts";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const commentsTable = pgTable("comments", {
   id: serial("id").primaryKey(),
@@ -44,3 +46,7 @@ export const commentRelations = relations(commentsTable, ({ one, many }) => ({
     relationName: "commentUpvotes",
   }),
 }));
+
+export const insertCommentsSchema = createInsertSchema(commentsTable, {
+  content: z.string().min(3, { message: "Comment must be at least 3 chars" }),
+});
